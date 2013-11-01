@@ -1,0 +1,27 @@
+- name: Create Instance
+  hosts: local
+  gather_facts: False
+  tasks:
+    - name: Server build request
+      local_action:
+        module: rax
+        service: cloudservers
+        name: ansible_awesome
+        key_name: ansible_test
+        flavor: 2
+        image: 25de7af5-1668-46fb-bd08-9974b63a4806
+        wait: yes
+        state: present
+      register: raxtest
+    - name: Add new instance to host group
+      local_action: add_host hostname={{ item.accessIPv4 }} groupname=awesome
+      with_items: raxtest.instances
+- name: Run shell command on server
+  hosts: awesome
+  user: root
+  tasks:
+    - name: Identify 
+      shell: hostname
+    - name: Praise Ansible....
+      shell: touch /tmp/ansible_is_awesome
+
