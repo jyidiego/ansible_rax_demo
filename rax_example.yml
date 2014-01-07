@@ -5,12 +5,14 @@
     - name: Server build request
       local_action:
         module: rax
-        service: cloudservers
-        name: ansible_awesome
-        key_name: ansible_test
-        flavor: 2
+        name: test-%03d.jyidiego.net 
+        count: 2
+        exact_count: yes
+        key_name: rax_max
+        flavor: performance1-1 
         image: 25de7af5-1668-46fb-bd08-9974b63a4806
         wait: yes
+        group: awesome
         state: present
       register: raxtest
     - name: Add new instance to host group
@@ -24,4 +26,6 @@
       shell: hostname
     - name: Praise Ansible....
       shell: touch /tmp/ansible_is_awesome
+    - name: Again Praise Ansible....
+      shell: touch /tmp/ansible_is_awesome001
 
