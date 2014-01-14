@@ -1,0 +1,8 @@
+
+[replication_servers]
+192.0.2.2
+192.0.2.3
+192.0.2.4
+
+[master_servers]
+192.0.2.2

@@ -1,0 +1,16 @@
+- name: Install Mongodb packages
+  hosts: replication_servers
+  gather_facts: True
+  roles:
+   - role: common
+- name: Setup Mongodb Replicaset members
+  hosts: replication_servers
+  gather_facts: True
+  roles:
+   - role: mongod
+- name: Intialize Mongodb Replicasets
+  hosts: master_servers
+  gather_facts: True
+  tasks:
+   - include: roles/mongod/tasks/master.yml
+
