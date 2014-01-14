@@ -15,7 +15,7 @@
         group: replication_servers
         state: present
       register: rax
-    - name: Add Mongo Servers to mongodb
+    - name: Add Mongo Servers to replications_servers
       local_action:
         module: add_host
         hostname: "{{ item.name }}"
@@ -23,15 +23,26 @@
         groupname: replication_servers
       with_items: rax.success
       when: rax.action == 'create'
+    - name: Find master server
+      local_action:
+        module: add_host
+        hostname: "{{ item.1 }}"
+        groupname: master_servers
+      with_indexed_items: groups.replication_servers
+      when: item.0 == 0
 - name: Install Mongodb packages
   hosts: replication_servers
   gather_facts: True
   roles:
    - role: common
-- name: Setup Mongodb Replicaset
+- name: Setup Mongodb Replicaset members
   hosts: replication_servers
   gather_facts: True
-  serial: 1
   roles:
    - role: mongod
+- name: Intialize Mongodb Replicasets
+  hosts: master_servers
+  gather_facts: True
+  tasks:
+   - include: roles/mongod/tasks/master.yml
 

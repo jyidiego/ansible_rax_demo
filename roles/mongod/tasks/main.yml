@@ -38,11 +38,3 @@
   with_items: groups.replication_servers
   when: item != inventory_hostname
 
-- name: Create the file to initialize the mongod replica set
-  template: src=repset_init.j2 dest=/tmp/repset_init.js
-
-- name: Pause for a while
-  pause: seconds=20
-
-- name: Initialize the replication set
-  shell: /usr/bin/mongo --port "{{ mongod_port }}" /tmp/repset_init.js 

@@ -4,7 +4,7 @@
 mongos_chunk_size: 1
 
 # The port in which mongod server should listen on 
-mongod_port: 9999 
+mongod_port: 27017
 
 # The port in which mongos server should listen on 
 mongos_port: 8888

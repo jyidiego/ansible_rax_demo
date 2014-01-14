@@ -6,7 +6,7 @@
       local_action:
         module: rax
         name: mongo%01d
-        count: 4
+        count: 3
         exact_count: yes
         key_name: rax_max
         flavor: performance1-1 
@@ -15,7 +15,7 @@
         group: replication_servers
         state: present
       register: rax
-    - name: Add Mongo Servers to mongodb
+    - name: Add Mongo Servers to replication_servers
       local_action:
         module: add_host
         hostname: "{{ item.name }}"
@@ -23,6 +23,18 @@
         groupname: replication_servers
       with_items: rax.success
       when: rax.action == 'create'
+    - name: Find master server 
+      debug: msg="rax_accessipv4 {{ item }}"
+      with_indexed_items: groups.replication_servers 
+    - name: Find master server 
+      local_action:
+        module: add_host
+        hostname: "{{ item.1 }}"
+        groupname: master_servers
+      with_indexed_items: groups.replication_servers 
+      when: item.0 == 0
+    - name: Dump rax
+      debug: msg="rax object {{ rax }}"
 - name: Debug attributes
   hosts: replication_servers
   gather_facts: False
@@ -35,4 +47,8 @@
       debug: msg="ip  {{ inventory_hostname }}"
       with_items: groups.replication_servers  
       when: item != inventory_hostname
+- name: get first item of the list
+  hosts: master_servers
+  tasks:
+    - command: hostname
 
