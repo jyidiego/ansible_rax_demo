@@ -1,0 +1,38 @@
+- name: Build Mongo Servers in Rax Cloud
+  hosts: local
+  gather_facts: False
+  tasks:
+    - name: Server build request
+      local_action:
+        module: rax
+        name: mongo%01d
+        count: 4
+        exact_count: yes
+        key_name: rax_max
+        flavor: performance1-1 
+        image: f70ed7c7-b42e-4d77-83d8-40fa29825b85
+        wait: yes
+        group: replication_servers
+        state: present
+      register: rax
+    - name: Add Mongo Servers to mongodb
+      local_action:
+        module: add_host
+        hostname: "{{ item.name }}"
+        ansible_ssh_host: "{{ item.rax_accessipv4 }}"
+        groupname: replication_servers
+      with_items: rax.success
+      when: rax.action == 'create'
+- name: Debug attributes
+  hosts: replication_servers
+  gather_facts: False
+  tasks:
+    - name: dump item and inventory_hostname
+      debug: msg="item  {{ item }} and {{ inventory_hostname }}"
+      with_items: groups.replication_servers  
+      when: item == inventory_hostname
+    - name: dump ipv4 address
+      debug: msg="ip  {{ inventory_hostname }}"
+      with_items: groups.replication_servers  
+      when: item != inventory_hostname
+
