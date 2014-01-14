@@ -1,0 +1,11 @@
+---
+# This role setup the replicaset
+
+- name: Create the file to initialize the mongod replica set
+  template: src=repset_init.j2 dest=/tmp/repset_init.js
+
+- name: Pause for 20 seconds
+  pause: seconds=20
+
+- name: Initialize the replication set
+  shell: /usr/bin/mongo --port "{{ mongod_port }}" /tmp/repset_init.js
