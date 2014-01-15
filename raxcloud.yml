@@ -8,7 +8,7 @@
         name: mongo%01d
         count: 3
         exact_count: yes
-        key_name: rax_max
+        key_name: ansible_demo
         flavor: performance1-1 
         image: f70ed7c7-b42e-4d77-83d8-40fa29825b85
         wait: yes
