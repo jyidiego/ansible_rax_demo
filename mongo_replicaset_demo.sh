@@ -7,4 +7,4 @@
 #   - i.e. nova keypair-add --pub-key ~/.ssh/id_rsa.pub ansible_demo
 #
 
-ansible-playbook -i ./hosts -u root -vvvv --private-key ~/.ssh/id_rsa raxcloud.yml
+ansible-playbook -i ./hosts -u root -v --private-key ~/.ssh/id_rsa raxcloud.yml
